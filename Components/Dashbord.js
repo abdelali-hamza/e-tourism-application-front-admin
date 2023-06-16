@@ -5,6 +5,7 @@ import CardThree from './Cards/CardThree'
 import CardFour from './Cards/CardFour'
 import Comment from './Comment'
 import Chart from './Chart'
+import { PieChart } from './PieChart'
 
 const Dashbord = () => {
 
@@ -20,8 +21,14 @@ const Dashbord = () => {
           <CardThree />
           <CardFour />
         </div>
-        <div className='mt-5'>
-          <Chart />
+        <div className='mt-5 flex justify-between items-center'>
+           <div className='mt-5 flex w-1/4justify-between'>
+            <PieChart />
+          </div>
+          <div className='mt-5 flex w-3/4 justify-between pl-8'>
+            <Chart />
+          </div>
+         
         </div>
         <div className='text-xl font-medium  flex flex-col mt-5'>
           <h3 className='mb-3 font-bold'>Commentaires sur l'application</h3>

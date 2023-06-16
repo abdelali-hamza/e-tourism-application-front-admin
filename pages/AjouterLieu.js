@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import wilayas from '../wilaya.json';
 import dynamic from "next/dynamic";
 import { findLocation } from "../Components/Map/commune_lag_lng";
+import Image from 'next/image';
+import logo from '../public/Numidia_Logo.png'
 
 const LocationPicker2 = dynamic(
     () =>
@@ -13,7 +15,7 @@ const LocationPicker2 = dynamic(
     }
 );
 
-const GestionLieu = () => {
+const AjouterLieu = () => {
 
     const [titre, setTitre] = useState('');
     const handleTitreChange = (event) => {
@@ -78,21 +80,6 @@ const GestionLieu = () => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [dragOver, setDragOver] = useState(false);
 
-    const handleFileChange = (event) => {
-        const files = Array.from(event.target.files).map((file) => file.name);
-        setSelectedFiles([...selectedFiles, ...files]);
-    };
-
-    const handleFileUpload = () => {
-        // Implement the file upload logic here
-        setSelectedFiles([]);
-    };
-
-    const handleDeleteFile = (fileName) => {
-        const updatedFiles = selectedFiles.filter((file) => file !== fileName);
-        setSelectedFiles(updatedFiles);
-    };
-
     const handleDragOver = (event) => {
         event.preventDefault();
         setDragOver(true);
@@ -104,9 +91,26 @@ const GestionLieu = () => {
 
     const handleDrop = (event) => {
         event.preventDefault();
-        const files = Array.from(event.dataTransfer.files).map((file) => file.name);
-        setSelectedFiles([...selectedFiles, ...files]);
+        const files = Array.from(event.dataTransfer.files);
+        setSelectedFiles((prevSelectedFiles) => [
+            ...prevSelectedFiles,
+            ...files.map((file) => URL.createObjectURL(file)),
+        ]);
         setDragOver(false);
+    };
+
+    const handleFileChange = (event) => {
+        const files = Array.from(event.target.files);
+        setSelectedFiles((prevSelectedFiles) => [
+            ...prevSelectedFiles,
+            ...files.map((file) => URL.createObjectURL(file)),
+        ]);
+    };
+
+    const handleDeleteFile = (fileUrl) => {
+        setSelectedFiles((prevSelectedFiles) =>
+            prevSelectedFiles.filter((url) => url !== fileUrl)
+        );
     };
 
 
@@ -117,8 +121,8 @@ const GestionLieu = () => {
                 <h1 className="mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                     Ajouter un <span className="text-orange-500">Lieu</span>
                 </h1>
-                <div className="flex flex-row w-full justify-between">
-                    <div className="w-1/2 mr-4">
+                <div className="flex flex-col sm:flex-row w-full justify-between">
+                    <div className="sm:w-1/2 w-full  mr-4">
                         <div className="relative z-0 w-full mb-6 group">
                             <input
                                 type="email"
@@ -289,7 +293,7 @@ const GestionLieu = () => {
                                 Description
                             </label>
                         </div>
-                        <div className=" w-80">
+                        <div className=" w-full">
                             <p className=" mb-1 text-gray-500 text-sm">Ajouter des photos et videos</p>
                             <div
                                 className={`border-2 p-8 text-center items-center border-dashed border-gray-300  rounded-md cursor-pointer transition duration-300 ${dragOver ? 'bg-gray-200' : ''
@@ -300,7 +304,7 @@ const GestionLieu = () => {
                             >
                                 <label
                                     htmlFor="file-upload"
-                                    className="px-5 py-1 flex flex-col items-center text-gray-500 rounded-md cursor-pointer hover:bg-gray-300 transition duration-300 ease-in-out"
+                                    className="px-5 py-3 flex flex-col items-center text-gray-500 rounded-md cursor-pointer hover:bg-gray-300 transition duration-300 ease-in-out"
                                 >
                                     <svg
                                         htmlFor="file-upload"
@@ -327,18 +331,12 @@ const GestionLieu = () => {
                                 />
                                 <p className="mt-2 ml-2 text-gray-500 text-sm">or drag and drop</p>
                                 {selectedFiles.length > 0 && (
-                                    <ul className="mt-4">
-                                        {selectedFiles.map((fileName, index) => (
-                                            <div
-                                                className="bg-gray-100 w-full flex flex-row truncate px-4 py-2 rounded-md text-gray-800 shadow-md mb-2"
-                                                key={index}
-                                            >
-                                                <li className="truncate ">
-                                                    <span className="truncate ">{fileName}</span>
-                                                </li>
+                                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-4">
+                                        {selectedFiles.map((fileUrl, index) => (
+                                            <div key={index} className="relative ">
                                                 <button
                                                     className="text-red-500"
-                                                    onClick={() => handleDeleteFile(fileName)}
+                                                    onClick={() => handleDeleteFile(fileUrl)}
                                                 >
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -351,9 +349,25 @@ const GestionLieu = () => {
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                     </svg>
                                                 </button>
+                                                <div className="w-full h-16">
+                                                        <Image
+                                                            src={fileUrl}
+                                                            alt={"NumidiaDz"}
+                                                            width="20"
+                                                            height="20"
+                                                            className="object-cover w-full h-full rounded-md"
+                                                            onError={(e) =>                           
+                                                                  (e.target.src =
+                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/2560px-Stadtbild_M%C3%BCnchen.jpg")
+                                                              }
+                                                        >                 
+                                                        </Image>
+                                                </div>
                                             </div>
                                         ))}
-                                    </ul>
+
+
+                                    </div>
                                 )}
                             </div>
 
@@ -365,7 +379,7 @@ const GestionLieu = () => {
                             </button>
                         </div>
                     </div>
-                    <div className='w-full h-full ml-8'>
+                    <div className='w-full h-64 sm:h-full sm:ml-8 mb-2'>
                         <label
                             className="label"
                             htmlFor="image"
@@ -385,4 +399,4 @@ const GestionLieu = () => {
     );
 };
 
-export default GestionLieu;
+export default AjouterLieu;

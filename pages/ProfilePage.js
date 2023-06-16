@@ -3,7 +3,7 @@ import React from 'react';
 const AdminProfilePage = () => {
     return (
         <div className=" min-h-screen">
-            <div className='text-3xl font-bold flex flex-col my-5'>Admin profile
+            <div className='text-3xl font-bold flex flex-col my-4'>Admin profile
             </div>
             <div className="max-w-3xl mx-auto px-4 py-8">
                 <div className="bg-white shadow rounded-lg p-6">

@@ -30,6 +30,12 @@ const Chart = () => {
         plugins: {
             legend: {
                 position: "top",
+                labels: {
+                    // This more specific font property overrides the global property
+                    font: {
+                        size: 14
+                    }
+                }
             },
             title: {
                 display: true,
@@ -42,7 +48,7 @@ const Chart = () => {
             },
         },
         backgroundColor: "white",
-    };
+        };
 
     const labels = [
         "Dim",
@@ -80,7 +86,8 @@ const Chart = () => {
         ],
     };
 
-    return <Line data={data} options={options} />;
+    return <Line data={data} 
+    options={options} />;
 };
 
 export default Chart;

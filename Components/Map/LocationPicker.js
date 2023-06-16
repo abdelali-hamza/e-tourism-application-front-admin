@@ -17,6 +17,7 @@ function LocationMarker({ position, onChangePosition }) {
 			onChangePosition(e.latlng);
 			setFly(false);
 		},
+
 	});
 	const map1 = useMap();
 	map1.flyTo(position, 13);
@@ -30,13 +31,20 @@ function LocationMarker({ position, onChangePosition }) {
 				iconSize: [42, 42],
 				iconAnchor: [12, 41],
 			})}
+			eventHandlers={{
+				dragend: (e) => {
+					console.log(e.target._latlng);
+					onChangePosition(e.target._latlng);
+					setFly(false);
+				},
+			}}
 		></Marker>
 	);
 }
 
 export default function LocationPicker({ position, onChangedPosition }) {
 	return (
-		<div className="border-2 border-purple w-full flex justify-center rounded-xl overflow-hidden  mx-auto">
+		<div className="border-2 h-full border-purple w-full flex justify-center rounded-xl overflow-hidden  mx-auto">
 			<MapContainer
 				center={position}
 				zoom={15}

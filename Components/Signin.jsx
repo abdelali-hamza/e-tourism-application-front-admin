@@ -1,22 +1,19 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { useState } from "react";
-
+import { useRouter } from "next/router";
 import logo from "../public/logo.png";
-
 import * as React from "react";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function SignIn() {
   const [enteredUsername, setEnteredUsername] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
+  const router = useRouter();
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    router.push("/items");
   };
 
   return (
@@ -85,6 +82,7 @@ export default function SignIn() {
                 </a>
               </div>
               <button
+                onClick={handleSubmit}
                 type="submit"
                 className="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
               >

@@ -3,7 +3,6 @@ import wilayas from '../wilaya.json';
 import dynamic from "next/dynamic";
 import { findLocation } from "../Components/Map/commune_lag_lng";
 import Image from 'next/image';
-import logo from '../public/Numidia_Logo.png'
 
 const LocationPicker2 = dynamic(
     () =>

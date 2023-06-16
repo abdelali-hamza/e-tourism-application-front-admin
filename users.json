@@ -1,53 +1,52 @@
 [
-    {
-      "nom": "imed triki",
-      "email": "imed@example.com",
-      "status": "online"
-    },
-    {
-      "nom": "John Doe",
-      "email": "johndoe@example.com",
-      "status": "offline"
-    },
-    {
-      "nom": "Alice Smith",
-      "email": "alice@example.com",
-      "status": "online"
-    },
-    {
-      "nom": "Bob Johnson",
-      "email": "bob@example.com",
-      "status": "online"
-    },
-    {
-      "nom": "Emily Brown",
-      "email": "emily@example.com",
-      "status": "offline"
-    },
-    {
-      "nom": "Michael Davis",
-      "email": "michael@example.com",
-      "status": "online"
-    },
-    {
-      "nom": "Sophia Wilson",
-      "email": "sophia@example.com",
-      "status": "online"
-    },
-    {
-      "nom": "David Taylor",
-      "email": "david@example.com",
-      "status": "offline"
-    },
-    {
-      "nom": "Olivia Anderson",
-      "email": "olivia@example.com",
-      "status": "online"
-    },
-    {
-      "nom": "James Martinez",
-      "email": "james@example.com",
-      "status": "online"
-    }
-  ]
-  
+  {
+    "nom": "Mohamed Belkacem",
+    "email": "mohamed@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Fatima Zohra",
+    "email": "fatima@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Ahmed Bouzid",
+    "email": "ahmed@example.com",
+    "status": "offline"
+  },
+  {
+    "nom": "Amina Benali",
+    "email": "amina@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Abdelkader Djebbar",
+    "email": "abdelkader@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Nadia Khaled",
+    "email": "nadia@example.com",
+    "status": "offline"
+  },
+  {
+    "nom": "Karim Cherif",
+    "email": "karim@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Zahra Meziani",
+    "email": "zahra@example.com",
+    "status": "offline"
+  },
+  {
+    "nom": "Ali Hamdi",
+    "email": "ali@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Samira Mansouri",
+    "email": "samira@example.com",
+    "status": "online"
+  }
+]

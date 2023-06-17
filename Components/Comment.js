@@ -22,7 +22,7 @@ const Comment = () => {
                 src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
                 alt="Michael Gough"
               />
-              Michael Gough
+              Imed triki
             </p>
             <p className="text-sm text-gray-600 font-semibold dark:text-gray-400">
               <time pubdate="true" dateTime="2022-02-08" title="February 8th, 2022">
@@ -88,16 +88,16 @@ const Comment = () => {
             <div className="mt-2 flex justify-end">
               <button
                 type="button"
-                onClick={() => setIsReplying(false)}
-                className="text-sm font-semibold text-gray-500 hover:underline"
+                className="text-sm font-semibold text-gray-500 hover:underline mr-5"
               >
-                Cancel
+                Envoyer
               </button>
               <button
                 type="button"
-                className="ml-2 py-2 px-4 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300"
+                onClick={() => setIsReplying(false)}
+                className="text-sm font-semibold text-gray-500 hover:underline"
               >
-                Reply
+                Annuler
               </button>
             </div>
           </div>

@@ -5,7 +5,7 @@ export default function Layout(props) {
     const { children } = props
     return (
         <div className='flex flex-row justify-between w-full h-full'>
-            <div>
+            <div >
                 <Sidebar />
             </div>
             <div className="w-full flex flex-col sticky top-0">

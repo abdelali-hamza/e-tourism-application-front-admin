@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import wilayas from '../wilaya.json';
+import categories from '../categorie.json';
+import themes from '../thème.json';
 import dynamic from "next/dynamic";
 import { findLocation } from "../Components/Map/commune_lag_lng";
 import Image from 'next/image';
+
+
 
 const LocationPicker2 = dynamic(
     () =>
@@ -14,6 +18,18 @@ const LocationPicker2 = dynamic(
     }
 );
 
+/*export async function getServerSideProps() {
+    const res = await fetch("http://localhost:3001/lieu/All")
+    const lieux = await res.json()
+    return{
+        props:{
+            initialLieux : lieux
+        }
+    }
+}*/
+
+
+
 const AjouterLieu = () => {
 
     const [titre, setTitre] = useState('');
@@ -21,22 +37,12 @@ const AjouterLieu = () => {
         setTitre(event.target.value);
     };
 
-    const [theme, setTheme] = useState('');
-    const handleThemeChange = (event) => {
-        setTheme(event.target.value);
-    };
-
-    const [categorie, setCategorie] = useState('');
-    const handleCategorieChange = (event) => {
-        setCategorie(event.target.value);
-    };
-
-    const [heureOuv, setHeureOuv] = useState('');
+    const [heureOuv, setHeureOuv] = useState('toujours');
     const handleHeureOuvChange = (event) => {
         setHeureOuv(event.target.value);
     };
 
-    const [heureFer, setHeureFer] = useState('');
+    const [heureFer, setHeureFer] = useState('toujours');
     const handleHeureFerChange = (event) => {
         setHeureFer(event.target.value);
     };
@@ -51,25 +57,36 @@ const AjouterLieu = () => {
         setLatitude(event.target.value);
     };
 
+    const [prix, setPrix] = useState('0');
+    const handlePrixChange = (event) => {
+        setPrix(event.target.value);
+    };
+
+    const [selectedWilaya, setSelectedWilaya] = useState('');
     const handleWilayaChange = (event) => {
         const selectedWilaya = event.target.value;
         setSelectedWilaya(selectedWilaya);
         setPosition(findLocation(selectedWilaya));
     };
 
-    const [prix, setPrix] = useState('');
-    const handlePrixChange = (event) => {
-        setPrix(event.target.value);
+    const [selectedCategorie, setSelectedCategorie] = useState('');
+    const handleCategorieChange = (event) => {
+        const selectedCategorie = event.target.value;
+        setSelectedCategorie(selectedCategorie);
     };
 
-    const [selectedWilaya, setSelectedWilaya] = useState('');
+    const [selectedTheme, setSelectedTheme] = useState('');
+    const handleThemeChange = (event) => {
+        const selectedCategorie = event.target.value;
+        setSelectedTheme(selectedCategorie);
+    };
 
     const [position, setPosition] = useState({
         lat: "36.7681618",
         lng: "3.0404258",
     });
 
-    const [description, setDescription] = useState('');
+    const [description, setDescription] = useState('Aucune');
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
     };
@@ -93,7 +110,7 @@ const AjouterLieu = () => {
         const files = Array.from(event.dataTransfer.files);
         setSelectedFiles((prevSelectedFiles) => [
             ...prevSelectedFiles,
-            ...files.map((file) => URL.createObjectURL(file)),
+            ...files,
         ]);
         setDragOver(false);
     };
@@ -102,7 +119,7 @@ const AjouterLieu = () => {
         const files = Array.from(event.target.files);
         setSelectedFiles((prevSelectedFiles) => [
             ...prevSelectedFiles,
-            ...files.map((file) => URL.createObjectURL(file)),
+            ...files,
         ]);
     };
 
@@ -112,10 +129,58 @@ const AjouterLieu = () => {
         );
     };
 
+    function findIdByWilaya(wilaya) {
+        const foundItem = wilayas.find(item => item.wilaya === wilaya);
+        return foundItem ? foundItem.id : null;
+    }
+
+    const [error, setError] = useState(false)
+
+    const handleAddLieu = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("nom", titre);
+            formData.append("theme", selectedTheme);
+            formData.append("categorie", selectedCategorie);
+            formData.append("description", description);
+            formData.append("tarif", parseInt(prix));
+            formData.append("documentation", null); // Replace with the actual documentation value
+            formData.append("tempsouverture", heureOuv);
+            formData.append("tempsfermeture", heureFer);
+            formData.append("lat", parseFloat(latitude));
+            formData.append("long", parseFloat(longitude));
+            formData.append("wilaya", findIdByWilaya(selectedWilaya));
+
+            for (let i = 0; i < selectedFiles.length; i++) {
+                formData.append("pictures", selectedFiles[i]);
+            }
+
+            const response = await fetch("http://localhost:3001/lieu/add/1", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                console.log("Lieu created successfully");
+                setTimeout(() => {
+                    setError(false)
+                    // Code to be executed after the delay
+                }, 3000); // Delay of 3000 milliseconds (3 seconds)
+                setError(true)
+                // Handle success scenario
+            } else {
+                console.error("Failed to create lieu");
+                // Handle failure scenario
+            }
+        } catch (error) {
+            console.error("Failed to create lieu:", error);
+            // Handle error scenario
+        }
+    };
 
     return (
         <div className="justify-center items-center">
-            <div className="text-3xl font-bold flex flex-col my-5">Ajouter un lieu</div>
+            <div className="text-3xl font-bold flex flex-col my-5 mt-2">Ajouter un lieu</div>
             <div className="w-full p-6 bg-white rounded-lg shadow dark:border flex-row md:mt-0  dark:bg-gray-800 dark:border-gray-700 sm:p-8 m-auto">
                 <h1 className="mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                     Ajouter un <span className="text-orange-500">Lieu</span>
@@ -133,45 +198,43 @@ const AjouterLieu = () => {
                             />
                             <label
                                 htmlFor="titre"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                className="peer-focus:font-medium absolute text-sm  dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                             >
                                 Titre
                             </label>
                         </div>
                         <div className="relative z-0 w-full mb-6 group">
-                            <input
-                                type="text"
-                                name="theme"
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
-                                required
+                            <select
+                                value={selectedTheme}
                                 onChange={handleThemeChange}
-                            />
-                            <label
-                                htmlFor="theme"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                Thème
-                            </label>
-                        </div>
-                        <div className="relative z-0 w-full mb-8 group">
-                            <input
-                                type="text"
                                 name="categorie"
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
-                                required
-                                onChange={handleCategorieChange}
-                            />
-                            <label
-                                htmlFor="categorie"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                className="block py-2.5 px-1 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             >
-                                Catégorie
-                            </label>
+                                <option value="" >Thème</option>
+                                {themes.map((theme, index) => (
+                                    <option key={index} value={theme}>
+                                        {theme}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
-                        <div className="grid md:grid-cols-2 md:gap-6 ">
-                            <div className="relative z-0 w-full mb-6 group">
+                        <div className="relative z-0 w-full mb-6 group">
+                            <select
+                                value={selectedCategorie}
+                                onChange={handleCategorieChange}
+                                name="categorie"
+                                className="block py-2.5 px-1 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            >
+                                <option value="" >Catégorie</option>
+                                {categories.map((categorie, index) => (
+                                    <option key={index} value={categorie}>
+                                        {categorie}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="grid md:grid-cols-2 md:gap-6 mt-8">
+                            <div className="relative z-0 w-full mb-4 group">
                                 <input
                                     type="time"
                                     name="HeureOuv"
@@ -182,7 +245,7 @@ const AjouterLieu = () => {
                                 />
                                 <label
                                     htmlFor="HeureOuv"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    className="peer-focus:font-medium absolute text-sm  dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                 >
                                     Heure d'ouverture
                                 </label>
@@ -198,14 +261,28 @@ const AjouterLieu = () => {
                                 />
                                 <label
                                     htmlFor="HeureFem"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    className="peer-focus:font-medium absolute text-sm  dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                 >
                                     Heure fermeture
                                 </label>
                             </div>
                         </div>
-                        <div className="grid md:grid-cols-2 md:gap-6 mb-6">
-                            <div className="relative z-0 w-full mb-6 group">
+                        <div className="relative z-0 w-full mb-8 group">
+                            <select
+                                value={selectedWilaya}
+                                onChange={handleWilayaChange}
+                                className="block py-2.5 px-1 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            >
+                                <option value="" className=''>Wilaya</option>
+                                {wilayas.map((wilaya, index) => (
+                                    <option key={index} value={wilaya.wilaya}>
+                                        {wilaya.wilaya}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="grid md:grid-cols-2 md:gap-6 mb-2 mt-2">
+                            <div className="relative z-0 w-full mb-2 group">
                                 <input
                                     type="float"
                                     name="Longuitude"
@@ -222,7 +299,7 @@ const AjouterLieu = () => {
                                     Longuitude
                                 </label>
                             </div>
-                            <div className="relative z-0 w-full mb-6 group">
+                            <div className="relative z-0 w-full mb-2 group">
                                 <input
                                     type="float"
                                     name="Latitude"
@@ -240,26 +317,8 @@ const AjouterLieu = () => {
                                 </label>
                             </div>
                         </div>
-                        <div className="relative z-0 w-full mb-6 group">
-                            <select
-                                value={selectedWilaya}
-                                onChange={handleWilayaChange}
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            >
-                                <option value="">Sélectionner une wilaya</option>
-                                {wilayas.map((wilaya, index) => (
-                                    <option key={index} value={wilaya}>
-                                        {wilaya}
-                                    </option>
-                                ))}
-                            </select>
-                            <label
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                Wilaya
-                            </label>
-                        </div>
-                        <div className="relative z-0 w-full mb-8 group">
+
+                        <div className="relative z-0 w-full mb-4 group">
                             <input
                                 type="number"
                                 name="floating_password"
@@ -272,14 +331,14 @@ const AjouterLieu = () => {
                             />
                             <label
                                 htmlFor="floating_password"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                className="peer-focus:font-medium absolute text-sm  dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                             >
                                 Prix
                             </label>
                         </div>
                         <div className="relative z-0 w-full mb-6 group">
                             <textarea
-                                value={description}
+                                
                                 onChange={handleDescriptionChange}
                                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                 placeholder=" "
@@ -287,13 +346,13 @@ const AjouterLieu = () => {
                             />
                             <label
                                 htmlFor="floating_description"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                className="peer-focus:font-medium absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                             >
                                 Description
                             </label>
                         </div>
                         <div className=" w-full">
-                            <p className=" mb-1 text-gray-500 text-sm">Ajouter des photos et videos</p>
+                            <p className=" mb-1 text-sm">photos et videos</p>
                             <div
                                 className={`border-2 p-8 text-center items-center border-dashed border-gray-300  rounded-md cursor-pointer transition duration-300 ${dragOver ? 'bg-gray-200' : ''
                                     }`}
@@ -349,18 +408,18 @@ const AjouterLieu = () => {
                                                     </svg>
                                                 </button>
                                                 <div className="w-full h-16">
-                                                        <Image
-                                                            src={fileUrl}
-                                                            alt={"NumidiaDz"}
-                                                            width="20"
-                                                            height="20"
-                                                            className="object-cover w-full h-full rounded-md"
-                                                            onError={(e) =>                           
-                                                                  (e.target.src =
-                                                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/2560px-Stadtbild_M%C3%BCnchen.jpg")
-                                                              }
-                                                        >                 
-                                                        </Image>
+                                                    <Image
+                                                        src={URL.createObjectURL(fileUrl)}
+                                                        alt={"NumidiaDz"}
+                                                        width="20"
+                                                        height="20"
+                                                        className="object-cover w-full h-full rounded-md"
+                                                        onError={(e) =>
+                                                        (e.target.src =
+                                                            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/2560px-Stadtbild_M%C3%BCnchen.jpg")
+                                                        }
+                                                    >
+                                                    </Image>
                                                 </div>
                                             </div>
                                         ))}
@@ -372,10 +431,12 @@ const AjouterLieu = () => {
 
                             <button
                                 type="submit"
-                                className="text-white mt-4 bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                className="text-white mt-16 bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm sm:w-full px-5 py-2.5 text-center"
+                                onClick={handleAddLieu}
                             >
                                 Submit
                             </button>
+
                         </div>
                     </div>
                     <div className='w-full h-64 sm:h-full sm:ml-8 mb-2'>
@@ -393,6 +454,11 @@ const AjouterLieu = () => {
                         />
                     </div>
                 </div>
+                {error && <div
+                    className="text-black bg-opacity-30 w-1/4 bg-green-400 border-2 border-solid border-green-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm mx-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                    Lieu Ajouté avec succès
+                </div>}
             </div>
         </div>
     );

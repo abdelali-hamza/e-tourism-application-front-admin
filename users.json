@@ -1,0 +1,52 @@
+[
+  {
+    "nom": "Mohamed Belkacem",
+    "email": "mohamed@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Fatima Zohra",
+    "email": "fatima@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Ahmed Bouzid",
+    "email": "ahmed@example.com",
+    "status": "offline"
+  },
+  {
+    "nom": "Amina Benali",
+    "email": "amina@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Abdelkader Djebbar",
+    "email": "abdelkader@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Nadia Khaled",
+    "email": "nadia@example.com",
+    "status": "offline"
+  },
+  {
+    "nom": "Karim Cherif",
+    "email": "karim@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Zahra Meziani",
+    "email": "zahra@example.com",
+    "status": "offline"
+  },
+  {
+    "nom": "Ali Hamdi",
+    "email": "ali@example.com",
+    "status": "online"
+  },
+  {
+    "nom": "Samira Mansouri",
+    "email": "samira@example.com",
+    "status": "online"
+  }
+]

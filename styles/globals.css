@@ -3,11 +3,20 @@
 @tailwind utilities;
 
 
-
-
 body {
   background: #f1f1f1;
   margin: 0;
   font-family: 'Poppins', sans-serif;
 }
+
+.login{
+  width: 100vw; /* Change from 100vh to 100vw */
+  height: 100vh;
+  background: #fff;
+  background-image: url("../public/bg.png");
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 

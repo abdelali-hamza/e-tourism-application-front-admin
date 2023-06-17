@@ -1,11 +1,11 @@
 import React from 'react'
-import CardOne from './Cards/CardOne'
-import CardTwo from './Cards/CardTwo'
-import CardThree from './Cards/CardThree'
-import CardFour from './Cards/CardFour'
-import Comment from './Comment'
-import Chart from './Chart'
-import { PieChart } from './PieChart'
+import CardOne from '../Components/Cards/CardOne'
+import CardTwo from '../Components/Cards/CardTwo'
+import CardThree from '../Components/Cards/CardThree'
+import CardFour from '../Components/Cards/CardFour'
+import Comment from '../Components/Comment'
+import Chart from '../Components/Chart'
+import { PieChart } from '../Components/PieChart'
 
 const Dashbord = () => {
 

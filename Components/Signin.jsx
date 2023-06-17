@@ -1,19 +1,46 @@
+import * as React from "react";
 import Image from "next/image";
-import { Inter } from "next/font/google";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import logo from "../public/logo.png";
-import * as React from "react";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function SignIn() {
-  const [enteredUsername, setEnteredUsername] = useState("");
+  const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
-  const handleSubmit = (event) => {
+
+  const EmailChangeHandler = (event) => {
+    setEnteredEmail(event.target.value);
+  };
+  const PasswordChangeHandler = (event) => {
+    setEnteredPassword(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    router.push("/items");
+    console.log("response");
+    try {
+      const response = await fetch("http://localhost:3001/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Email: enteredEmail,
+          Mdp: enteredPassword,
+        }),
+      });
+      const json = await response?.json();
+      if (response.ok) {
+        localStorage.setItem("user", JSON.stringify(json));
+        console.log(response);
+        router.push("/dashboard");
+      } else {
+        if (response.status === 400 || response.status === 409)
+          setError("error");
+      }
+    } catch (e) {
+      setError(e);
+    }
   };
 
   return (
@@ -27,7 +54,7 @@ export default function SignIn() {
             <form className="space-y-4 md:space-y-6" action="#">
               <div>
                 <label
-                  for="email"
+                  htmlFor="email"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
                   Your email
@@ -39,11 +66,12 @@ export default function SignIn() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                   placeholder="name@company.com"
                   required=""
+                  onChange={EmailChangeHandler}
                 />
               </div>
               <div>
                 <label
-                  for="password"
+                  htmlFor="password"
                   className="block mb-2 text-sm font-medium text-gray-900"
                 >
                   Password
@@ -55,6 +83,7 @@ export default function SignIn() {
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                   required=""
+                  onChange={PasswordChangeHandler}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -69,7 +98,7 @@ export default function SignIn() {
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <label for="remember" className="text-gray-500 ">
+                    <label htmlFor="remember" className="text-gray-500 ">
                       Remember me
                     </label>
                   </div>
@@ -97,6 +126,16 @@ export default function SignIn() {
                   Sign up
                 </a>
               </p>
+              {error ? (
+                <div
+                  class="flex items-center bg-transparent text-red-600 text-sm font-bold px-4 py-3"
+                  role="alert"
+                >
+                  <p>Incorrect credentials , please check them again</p>
+                </div>
+              ) : (
+                <></>
+              )}
             </form>
           </div>
         </div>

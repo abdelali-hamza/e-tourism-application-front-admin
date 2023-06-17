@@ -47,10 +47,9 @@ export default function Home() {
     });
   };
   return (
-    <>
+
       <div className="h-screen items-center justify-center">
         <LieuxTable items={places} onDeleteItem={deleteItemHandler} />
       </div>
-    </>
   );
 }

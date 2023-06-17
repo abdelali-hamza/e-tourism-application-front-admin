@@ -28,11 +28,6 @@ const Dashbord = () => {
           <div className='mt-5 flex w-3/4 justify-between pl-8'>
             <Chart />
           </div>
-         
-        </div>
-        <div className='text-xl font-medium  flex flex-col mt-5'>
-          <h3 className='mb-3 font-bold'>Commentaires sur l'application</h3>
-          <Comment />
         </div>
       </div>
     </div>

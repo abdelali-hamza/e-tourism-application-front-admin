@@ -17,7 +17,7 @@ const CardThree = () => {
                         </svg>
                     </div>
                     <span className="text-sm text-gray-500 font-medium ml-1">
-                        25% (30 days)
+                        25% (30 jours)
                     </span>
                 </div>
             </div>

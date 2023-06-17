@@ -43,7 +43,7 @@ const Establishments = () => {
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th className="py-2 px-2">ID</th>
+                            <th className="py-2 px-2">NUM</th>
                             <th className="py-2 px-2">Catégorie</th>
                             <th className="py-2 px-2">Adresse</th>
                             <th className="py-2 px-2">Nom</th>

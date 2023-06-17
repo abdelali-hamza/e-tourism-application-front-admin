@@ -77,8 +77,8 @@ const AjouterLieu = () => {
 
     const [selectedTheme, setSelectedTheme] = useState('');
     const handleThemeChange = (event) => {
-        const selectedCategorie = event.target.value;
-        setSelectedTheme(selectedCategorie);
+        const selectedTheme = event.target.value;
+        setSelectedTheme(selectedTheme);
     };
 
     const [position, setPosition] = useState({
@@ -150,6 +150,7 @@ const AjouterLieu = () => {
             formData.append("lat", parseFloat(latitude));
             formData.append("long", parseFloat(longitude));
             formData.append("wilaya", findIdByWilaya(selectedWilaya));
+            console.log(formData)
 
             for (let i = 0; i < selectedFiles.length; i++) {
                 formData.append("pictures", selectedFiles[i]);

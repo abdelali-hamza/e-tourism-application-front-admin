@@ -17,7 +17,7 @@ const CardTwo = () => {
             </svg>
           </div>
           <span className="text-sm text-gray-500 font-medium ml-1">
-            4% (30 days)
+            4% (30 jours)
           </span>
         </div>
       </div>

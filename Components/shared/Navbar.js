@@ -171,9 +171,11 @@ const Navbar = () => {
                                 <div className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer">
                                     Paramètres
                                 </div>
-                                <div className="block px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900 cursor-pointer">
-                                    Déconnexion
-                                </div>
+                                <Link href="/">
+                                    <div className="block px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900 cursor-pointer">
+                                        Déconnexion
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                     )}

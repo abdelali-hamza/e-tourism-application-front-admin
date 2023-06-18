@@ -44,9 +44,9 @@ const Establishments = () => {
                     <thead className="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th className="py-2 px-2">NUM</th>
+                            <th className="py-2 px-2">Nom</th>
                             <th className="py-2 px-2">Catégorie</th>
                             <th className="py-2 px-2">Adresse</th>
-                            <th className="py-2 px-2">Nom</th>
                             <th className="py-2 px-2">Wilaya</th>
                             <th className="py-2 px-2">Téléphone</th>
                             <th className="py-2 px-2">Email</th>
